@@ -52,6 +52,16 @@ static const Color darkNavigation = Color(0xFF141922);
       color: black
     )
   ) ,
+
+  //elevatedButton
+
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: primary,
+      padding: EdgeInsets.only(top: 8),
+      
+    )
+  )
  );
 
 
