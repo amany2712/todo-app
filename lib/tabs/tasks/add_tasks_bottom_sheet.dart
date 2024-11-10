@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:todo/widgets/default_elevated_bottom.dart';
 import 'package:todo/widgets/default_text_form_feild.dart';
 
@@ -97,8 +99,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 label: 'Add',
                 onPressed:(){
                   if (formKey.currentState!.validate()) {
-                    addTask;
-                    } ;
+                    addTask();
+                    } 
+
+
                    }
                 ),
       
@@ -107,7 +111,8 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       ),
     );
   }
-  void addTask () {
+
+  Future<void> addTask () async {
     TaskModel task =TaskModel(
       title: titleController.text ,
       description: descriptionController.text ,
@@ -116,9 +121,11 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
       
     );
 
-    FirebaseFunctions.addTaskToFirestore(task).timeout(
+     await FirebaseFunctions.addTaskToFirestore(task).timeout(
       Duration(microseconds: 100),
-       onTimeout: () {Navigator.of(context).pop();
+       onTimeout: () {
+        Navigator.of(context).pop();
+        Provider.of<TasksProvider>(context, listen: false).getTasks();
        },).catchError(
         (error){ print(error);} 
         );
