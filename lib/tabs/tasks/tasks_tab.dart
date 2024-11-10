@@ -19,6 +19,7 @@ class _TasksTabState extends State<TasksTab> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);   //because to access 
+
    if (shouldGetTasks) {
     tasksProvider.getTasks();
     shouldGetTasks = false ;
@@ -52,8 +53,12 @@ class _TasksTabState extends State<TasksTab> {
            padding:  EdgeInsets.only(top: screenHeight*0.1),
            child: EasyInfiniteDateTimeLine(
             firstDate: DateTime.now().subtract(Duration(days:365)) , //Subtract a year from the current date
-            focusDate:DateTime.now() ,
+            focusDate: tasksProvider.selectedDate ,
             lastDate:DateTime.now().add(Duration(days: 365)) ,  //Add one year from the current date
+            onDateChange: (selectedDate) {
+                tasksProvider.changeSelectedDate(selectedDate);   //This made me know how to switch days
+                tasksProvider.getTasks();   //And also bring me the tasks that are available on the day that you chose.
+              } ,
             showTimelineHeader: false,
          
             dayProps: EasyDayProps(
@@ -81,6 +86,24 @@ class _TasksTabState extends State<TasksTab> {
               ), 
          
               inactiveDayStyle: DayStyle(
+                decoration: BoxDecoration(
+                  color: AppTheme.white,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                dayNumStyle: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.black
+                ) ,
+         
+                dayStrStyle: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.black
+                ) , 
+              ),
+
+              todayStyle: DayStyle(
                 decoration: BoxDecoration(
                   color: AppTheme.white,
                   borderRadius: BorderRadius.circular(5),
