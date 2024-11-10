@@ -3,7 +3,7 @@ import 'package:todo/app_theme.dart';
 import 'package:todo/models/task_model.dart';
 
 class TaskItem extends StatelessWidget {
-  TaskMdoel task;
+  TaskModel task;
   TaskItem( this.task);
 
 
