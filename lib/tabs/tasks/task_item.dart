@@ -8,11 +8,43 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/edit_screen.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends StatefulWidget {
   TaskModel task;
   TaskItem( this.task);
 
+  @override
+  State<TaskItem> createState() => _TaskItemState();
+}
 
+class _TaskItemState extends State<TaskItem> {
+
+ late bool isDone ;  // Track whether the task is done
+
+  void initState() {
+    super.initState();
+    
+    isDone = widget.task.isDone; // Initialize with saved state
+  }
+
+  void toggleDone() {
+    setState(() {
+      isDone = !isDone;
+    });
+
+    TaskModel updatedTask = widget.task;
+    updatedTask.isDone = isDone;
+
+    FirebaseFunctions.updateTaskInFirestore(updatedTask).catchError((error) {
+      Fluttertoast.showToast(
+        msg: "Error updating task",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    });
+  }
+
+ 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);         //Because I use themes a lot
@@ -29,7 +61,7 @@ class TaskItem extends StatelessWidget {
         // A SlidableAction can have an icon and/or a label.
         SlidableAction(
           onPressed: (_) {
-            FirebaseFunctions.DeleteTaskFromFirestore(task.id)
+            FirebaseFunctions.DeleteTaskFromFirestore(widget.task.id)
             .timeout(
               Duration(microseconds: 100),
               onTimeout: () => Provider.of<TasksProvider>(context, listen: false).getTasks()
@@ -56,7 +88,7 @@ class TaskItem extends StatelessWidget {
           Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditScreen(task), 
+                        builder: (context) => EditScreen(widget.task), 
                       ),
                     );
         },
@@ -90,12 +122,12 @@ class TaskItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                   task.title,
+                   widget.task.title,
                    style: theme.textTheme.titleMedium ?.copyWith(color: theme.primaryColor),
                    ),
                   SizedBox(height: 5,),
                   Text(
-                    task.description,
+                    widget.task.description,
                     style: theme.textTheme.titleSmall,
                    )
                 ],
@@ -111,11 +143,30 @@ class TaskItem extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(10))
       
                 ),
-                child: Icon(
-                  Icons.check,
-                  size: 33,
-                  color: AppTheme.white,
-                  ),
+                child: GestureDetector(
+                  onTap: toggleDone,
+                  child: isDone
+                      ? Container(
+                        margin: EdgeInsets.zero, 
+                        padding: EdgeInsets.zero, 
+                       decoration: BoxDecoration(
+                       color: AppTheme.white,
+                        borderRadius: BorderRadius.zero,),
+                        child: Text(
+                            "Done!",
+                            style: TextStyle(
+                              color: AppTheme.green,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                      )
+                      : Icon(
+                          Icons.check,
+                          size: 24,
+                          color: AppTheme.white,
+                        ),
+                ),
                 
               )
             ],
@@ -127,4 +178,6 @@ class TaskItem extends StatelessWidget {
       ),
     );
   }
+
+
 }
