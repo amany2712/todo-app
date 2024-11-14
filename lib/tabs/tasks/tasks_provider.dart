@@ -7,11 +7,14 @@ class TasksProvider with ChangeNotifier{
   DateTime selectedDate = DateTime.now();
 
   Future <void> getTasks () async {
+    
     tasks = await FirebaseFunctions.getAllTasksFromFirestore();
+    
     tasks = tasks.where((task) => 
        task.date.year == selectedDate.year &&
        task.date.month == selectedDate.month &&
-       task.date.day == selectedDate.day
+       task.date.day == selectedDate.day 
+      
       )
      .toList();           //Return the tasks I did on the same day, month and year
     notifyListeners();
@@ -23,4 +26,6 @@ class TasksProvider with ChangeNotifier{
     notifyListeners();
 
   }
+
+  
 }
