@@ -27,6 +27,13 @@ class FirebaseFunctions {
 
   }
 
+   // Function to edit/update a task
+  static Future<void> updateTaskInFirestore(TaskModel task) async {
+    CollectionReference<TaskModel> tasksCollection = getTasksCollection();
+    
+    return tasksCollection.doc(task.id).update(task.toJson());
+  }
+
 
 
 }

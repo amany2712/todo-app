@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/tasks/edit_screen.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 
 class TaskItem extends StatelessWidget {
@@ -49,6 +50,21 @@ class TaskItem extends StatelessWidget {
           icon: Icons.delete,
           label: 'Delete',
         ),
+        
+        SlidableAction(
+        onPressed: (_) {
+          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditScreen(task), 
+                      ),
+                    );
+        },
+        backgroundColor: Color(0xFF21B7CA),
+        foregroundColor: Colors.white,
+        icon: Icons.edit,
+        label: 'Edit',
+      ),
         
       ],
       ),            
