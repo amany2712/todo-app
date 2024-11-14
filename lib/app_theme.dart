@@ -61,6 +61,12 @@ static const Color darkNavigation = Color(0xFF141922);
       padding: EdgeInsets.only(top: 8),
       
     )
+  ),
+
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: primary
+    )
   )
  );
 

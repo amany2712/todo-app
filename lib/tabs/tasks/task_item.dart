@@ -8,46 +8,14 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/edit_screen.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 
-class TaskItem extends StatefulWidget {
-  TaskModel task;
-  TaskItem( this.task);
+class TaskItem extends StatelessWidget {
+ final TaskModel task;
+ const TaskItem( this.task,{super.key});
 
-  @override
-  State<TaskItem> createState() => _TaskItemState();
-}
-
-class _TaskItemState extends State<TaskItem> {
-
- late bool isDone ;  // Track whether the task is done
-
-  void initState() {
-    super.initState();
-    
-    isDone = widget.task.isDone; // Initialize with saved state
-  }
-
-  void toggleDone() {
-    setState(() {
-      isDone = !isDone;
-    });
-
-    TaskModel updatedTask = widget.task;
-    updatedTask.isDone = isDone;
-
-    FirebaseFunctions.updateTaskInFirestore(updatedTask).catchError((error) {
-      Fluttertoast.showToast(
-        msg: "Error updating task",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    });
-  }
-
- 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);         //Because I use themes a lot
+    TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
 
     return Container(
        margin: EdgeInsets.symmetric(vertical: 8,horizontal: 20),
@@ -61,7 +29,7 @@ class _TaskItemState extends State<TaskItem> {
         // A SlidableAction can have an icon and/or a label.
         SlidableAction(
           onPressed: (_) {
-            FirebaseFunctions.DeleteTaskFromFirestore(widget.task.id)
+            FirebaseFunctions.DeleteTaskFromFirestore(task.id)
             .timeout(
               Duration(microseconds: 100),
               onTimeout: () => Provider.of<TasksProvider>(context, listen: false).getTasks()
@@ -88,7 +56,7 @@ class _TaskItemState extends State<TaskItem> {
           Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditScreen(widget.task), 
+                        builder: (context) => EditScreen(task), 
                       ),
                     );
         },
@@ -122,12 +90,12 @@ class _TaskItemState extends State<TaskItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                   widget.task.title,
+                   task.title,
                    style: theme.textTheme.titleMedium ?.copyWith(color: theme.primaryColor),
                    ),
                   SizedBox(height: 5,),
                   Text(
-                    widget.task.description,
+                    task.description,
                     style: theme.textTheme.titleSmall,
                    )
                 ],
@@ -144,8 +112,16 @@ class _TaskItemState extends State<TaskItem> {
       
                 ),
                 child: GestureDetector(
-                  onTap: toggleDone,
-                  child: isDone
+                 onTap: () async {
+                  task.isDone = ! task.isDone;
+                  await FirebaseFunctions.updateTaskInFirestore(task).timeout(
+                    const Duration(milliseconds: 10),
+                    onTimeout: (){
+                      tasksProvider.getTasks();
+                    }
+                    );
+                 },
+                  child:task.isDone
                       ? Container(
                         margin: EdgeInsets.zero, 
                         padding: EdgeInsets.zero, 
@@ -178,6 +154,4 @@ class _TaskItemState extends State<TaskItem> {
       ),
     );
   }
-
-
 }
