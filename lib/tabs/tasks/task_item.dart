@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
+import 'package:todo/auth/user_provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/edit_screen.dart';
@@ -16,6 +17,7 @@ class TaskItem extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);         //Because I use themes a lot
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
+    String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
 
     return Container(
        margin: EdgeInsets.symmetric(vertical: 8,horizontal: 20),
@@ -29,18 +31,18 @@ class TaskItem extends StatelessWidget {
         // A SlidableAction can have an icon and/or a label.
         SlidableAction(
           onPressed: (_) {
-            FirebaseFunctions.DeleteTaskFromFirestore(task.id)
+            FirebaseFunctions.DeleteTaskFromFirestore(task.id,userId)
             .timeout(
               Duration(microseconds: 100),
-              onTimeout: () => Provider.of<TasksProvider>(context, listen: false).getTasks()
+              onTimeout: () => Provider.of<TasksProvider>(context, listen: false).getTasks(userId)
               )
             .catchError((_){
                 Fluttertoast.showToast(
                   msg: "Something went wrong",
                  toastLength: Toast.LENGTH_LONG,  //in android & IOS only
                  timeInSecForIosWeb: 1,  //in web
-                 backgroundColor: Colors.red,
-                 textColor: Colors.white,
+                 backgroundColor: AppTheme.red,
+                 textColor: AppTheme.white,
                  fontSize: 16.0
                  );
               });
@@ -114,10 +116,10 @@ class TaskItem extends StatelessWidget {
                 child: GestureDetector(
                  onTap: () async {
                   task.isDone = ! task.isDone;
-                  await FirebaseFunctions.updateTaskInFirestore(task).timeout(
+                  await FirebaseFunctions.updateTaskInFirestore(task,userId).timeout(
                     const Duration(milliseconds: 10),
                     onTimeout: (){
-                      tasksProvider.getTasks();
+                      tasksProvider.getTasks(userId);
                     }
                     );
                  },

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/auth/login_screen.dart';
+import 'package:todo/auth/user_provider.dart';
+import 'package:todo/models/user_model.dart';
+import 'package:todo/tabs/tasks/tasks_provider.dart';
 
 class SettingsTab extends StatelessWidget {
 
@@ -15,7 +20,13 @@ class SettingsTab extends StatelessWidget {
                 Text('Logout',
                 style: Theme.of(context).textTheme.titleMedium,),
                 IconButton(
-                  onPressed: (){},
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+                    Provider.of<TasksProvider>(context,listen: false).tasks.clear();
+                    Provider.of<UserProvider>(context,listen: false).updateUser(null);
+                    
+                    
+                  },
                    icon: Icon(
                     Icons.logout,
                     size: 30,
