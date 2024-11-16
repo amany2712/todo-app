@@ -2,8 +2,11 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
+import 'package:todo/auth/user_provider.dart';
 import 'package:todo/tabs/tasks/task_item.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class TasksTab extends StatefulWidget {
   
@@ -19,9 +22,11 @@ class _TasksTabState extends State<TasksTab> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);   //because to access 
+    String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
 
    if (shouldGetTasks) {
-    tasksProvider.getTasks();
+     
+    tasksProvider.getTasks(userId);
     shouldGetTasks = false ;
     }
     
@@ -39,7 +44,7 @@ class _TasksTabState extends State<TasksTab> {
             PositionedDirectional(
               start: 20,
               child: SafeArea(
-                child: Text('To Do List',
+                child: Text(AppLocalizations.of(context)!.todoList,
                 style: Theme.of(context).textTheme.titleMedium ?.copyWith(
                   color: AppTheme.white,
                   fontSize: 22,
@@ -56,8 +61,8 @@ class _TasksTabState extends State<TasksTab> {
             focusDate: tasksProvider.selectedDate ,
             lastDate:DateTime.now().add(Duration(days: 365)) ,  //Add one year from the current date
             onDateChange: (selectedDate) {
-                tasksProvider.changeSelectedDate(selectedDate);   //This made me know how to switch days
-                tasksProvider.getTasks();   //And also bring me the tasks that are available on the day that you chose.
+                tasksProvider.getSelectedDateTasks(selectedDate,userId);   //This made me know how to switch days
+               // tasksProvider.getTasks();   //And also bring me the tasks that are available on the day that you chose.
               } ,
             showTimelineHeader: false,
          

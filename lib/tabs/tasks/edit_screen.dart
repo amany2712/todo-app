@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
+import 'package:todo/auth/user_provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
@@ -49,7 +50,7 @@ class _EditScreenState extends State<EditScreen> {
   Widget build(BuildContext context) {
         double screenHeight = MediaQuery.sizeOf(context).height;
             TextStyle ? titleMediumStyle = Theme.of(context).textTheme.titleMedium;        //We made this variable inside build because it has a context
-
+        
 
     return Scaffold(
       appBar: AppBar(
@@ -178,18 +179,19 @@ class _EditScreenState extends State<EditScreen> {
       date:selectedDate ,
       
     );
-    FirebaseFunctions.updateTaskInFirestore(updateTaske)
+    String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
+    FirebaseFunctions.updateTaskInFirestore(updateTaske,userId)
     .timeout(
       Duration(microseconds: 100),
        onTimeout: () {
         Navigator.of(context).pop();
-        Provider.of<TasksProvider>(context, listen: false).getTasks();
+        Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
          Fluttertoast.showToast(
             msg: "Task update successfully",
             toastLength: Toast.LENGTH_LONG,  //in android & IOS only
             timeInSecForIosWeb: 1,  //in web
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
+            backgroundColor: AppTheme.green,
+            textColor: AppTheme.white,
             fontSize: 16.0
            );
        },
@@ -200,8 +202,8 @@ class _EditScreenState extends State<EditScreen> {
             msg: "Something went wrong",
             toastLength: Toast.LENGTH_LONG,  //in android & IOS only
             timeInSecForIosWeb: 1,  //in web
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
+            backgroundColor: AppTheme.red,
+            textColor: AppTheme.white,
             fontSize: 16.0
            );
     });
