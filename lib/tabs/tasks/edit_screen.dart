@@ -6,9 +6,12 @@ import 'package:todo/app_theme.dart';
 import 'package:todo/auth/user_provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:todo/widgets/default_elevated_bottom.dart';
 import 'package:todo/widgets/default_text_form_feild.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class EditScreen extends StatefulWidget {
  static const String routeName='/edit-centent';
@@ -48,6 +51,8 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
         double screenHeight = MediaQuery.sizeOf(context).height;
             TextStyle ? titleMediumStyle = Theme.of(context).textTheme.titleMedium;        //We made this variable inside build because it has a context
         
@@ -56,7 +61,7 @@ class _EditScreenState extends State<EditScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppTheme.primary,
-        title: Text('To Do List',
+        title: Text(AppLocalizations.of(context)!.todoList,
                 style: Theme.of(context).textTheme.titleMedium ?.copyWith(
                   color: AppTheme.white,
                   fontSize: 22,
@@ -79,7 +84,7 @@ class _EditScreenState extends State<EditScreen> {
                 left: Radius.circular(15),
                 right:Radius.circular(15) 
                ),
-              color: AppTheme.white,
+              color: settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
             ),
             
             
@@ -88,7 +93,7 @@ class _EditScreenState extends State<EditScreen> {
               child: Column(
                 //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Edit Task',
+                  Text(AppLocalizations.of(context)!.edittask,
                   style: titleMediumStyle,
                   textAlign: TextAlign.center,
                   ),
@@ -96,10 +101,10 @@ class _EditScreenState extends State<EditScreen> {
             
                   DefaultTextFormFeild(
                     controller: titleController,
-                    hintText: 'This is title',
+                    hintText: AppLocalizations.of(context)!.thisistitle,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return ' Title can not be empty ';
+                        return AppLocalizations.of(context)!.title_can_not_be_empty;
                        }
                      return null;
                       
@@ -109,17 +114,17 @@ class _EditScreenState extends State<EditScreen> {
             
                    DefaultTextFormFeild(
                     controller:descriptionController ,
-                    hintText: 'Task details ',
+                    hintText: AppLocalizations.of(context)!.taskdetails,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty ) {
-                        return ' task details can not be empty ';
+                        return AppLocalizations.of(context)!.taskdetailscannotbeempty;
                        }
                      return null;
                       
                     },
                     ),
                      SizedBox(height: 45,),
-                     Text('Select date',
+                     Text(AppLocalizations.of(context)!.selectdate,
                      textAlign: TextAlign.center,
                      style: titleMediumStyle?.copyWith(fontSize: 20,fontWeight: FontWeight.w500 ),
                      ),
@@ -130,7 +135,7 @@ class _EditScreenState extends State<EditScreen> {
                         DateTime? dateTime = await showDatePicker(
                          context: context, 
                          initialDate: selectedDate, 
-                         firstDate: DateTime.now(),
+                         firstDate: DateTime(2000),
                          lastDate: DateTime.now().add(Duration(days: 365)),
                          initialEntryMode: DatePickerEntryMode.calendarOnly
                          );
@@ -142,14 +147,16 @@ class _EditScreenState extends State<EditScreen> {
                         } ,
                        child: Text(
                         dateFormat.format(selectedDate)  ,
-                       textAlign: TextAlign.center,),
+                       textAlign: TextAlign.center,style: titleMediumStyle,
+                       
+                       ),
                      ),
             
                      SizedBox(height: 100,),
             
                      //ElevatedButton
                      DefaultElevatedBottom(
-                      label: 'Save Changes',
+                      label: AppLocalizations.of(context)!.savechanges,
                       onPressed:(){
                         if (formKey.currentState!.validate()) {
                           editTask();
@@ -182,7 +189,7 @@ class _EditScreenState extends State<EditScreen> {
     String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
     FirebaseFunctions.updateTaskInFirestore(updateTaske,userId)
     .timeout(
-      Duration(microseconds: 100),
+      Duration(microseconds: 10),
        onTimeout: () {
         Navigator.of(context).pop();
         Provider.of<TasksProvider>(context, listen: false).getTasks(userId);

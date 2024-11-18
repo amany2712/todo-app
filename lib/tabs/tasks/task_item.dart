@@ -6,8 +6,10 @@ import 'package:todo/app_theme.dart';
 import 'package:todo/auth/user_provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/tabs/tasks/edit_screen.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskItem extends StatelessWidget {
  final TaskModel task;
@@ -18,6 +20,8 @@ class TaskItem extends StatelessWidget {
     ThemeData theme = Theme.of(context);         //Because I use themes a lot
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
     String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+
 
     return Container(
        margin: EdgeInsets.symmetric(vertical: 8,horizontal: 20),
@@ -50,7 +54,7 @@ class TaskItem extends StatelessWidget {
           backgroundColor: AppTheme.red,
           foregroundColor: AppTheme.white,
           icon: Icons.delete,
-          label: 'Delete',
+          label: AppLocalizations.of(context)!.delete,
         ),
         
         SlidableAction(
@@ -65,7 +69,7 @@ class TaskItem extends StatelessWidget {
         backgroundColor: Color(0xFF21B7CA),
         foregroundColor: Colors.white,
         icon: Icons.edit,
-        label: 'Edit',
+        label:AppLocalizations.of(context)!.edit,
       ),
         
       ],
@@ -73,7 +77,7 @@ class TaskItem extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppTheme.white,
+            color:  settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
             borderRadius: BorderRadius.all(Radius.circular(15))
       
           ),
@@ -84,7 +88,7 @@ class TaskItem extends StatelessWidget {
                 width: 4,
                 margin: EdgeInsetsDirectional.only(end: 12),
                 decoration: BoxDecoration(
-                  color: theme.primaryColor,
+                  color: task.isDone ? AppTheme.green : AppTheme.primary,
                   borderRadius: BorderRadius.all(Radius.circular(10))
                 ),
               ),
@@ -93,7 +97,7 @@ class TaskItem extends StatelessWidget {
                 children: [
                   Text(
                    task.title,
-                   style: theme.textTheme.titleMedium ?.copyWith(color: theme.primaryColor),
+                   style: theme.textTheme.titleMedium ?.copyWith(color: task.isDone ? AppTheme.green : AppTheme.primary,),
                    ),
                   SizedBox(height: 5,),
                   Text(
@@ -128,10 +132,10 @@ class TaskItem extends StatelessWidget {
                         margin: EdgeInsets.zero, 
                         padding: EdgeInsets.zero, 
                        decoration: BoxDecoration(
-                       color: AppTheme.white,
+                       color: settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
                         borderRadius: BorderRadius.zero,),
                         child: Text(
-                            "Done!",
+                           AppLocalizations.of(context)!.done,
                             style: TextStyle(
                               color: AppTheme.green,
                               fontWeight: FontWeight.bold,

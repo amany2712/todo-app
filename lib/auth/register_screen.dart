@@ -7,6 +7,7 @@ import 'package:todo/auth/login_screen.dart';
 import 'package:todo/auth/user_provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/home_screen.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/widgets/default_elevated_bottom.dart';
 import 'package:todo/widgets/default_text_form_feild.dart';
 
@@ -24,12 +25,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+            SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Text('Register',
                 style: Theme.of(context).textTheme.titleMedium ?.copyWith(
-                  color: AppTheme.black,
+                  color:  settingsProvider.isDark ? AppTheme.white : AppTheme.black,
                   fontSize: 22,
                 ),textAlign: TextAlign.center),
               centerTitle: true,

@@ -67,12 +67,72 @@ static const Color darkNavigation = Color(0xFF141922);
     style: TextButton.styleFrom(
       foregroundColor: primary
     )
-  )
+  ),
+
+ 
+
+ 
  );
 
 
 
- static ThemeData darkTheme = ThemeData();
+ static ThemeData darkTheme = ThemeData(
+   primaryColor: primary,
+  scaffoldBackgroundColor: backgroundDark,
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: darkNavigation,
+    selectedItemColor:primary,
+    unselectedItemColor: white,
+    showUnselectedLabels: false,
+    showSelectedLabels: false,
+
+  ),
+
+  //floatingActionButtonTheme
+  
+  floatingActionButtonTheme:FloatingActionButtonThemeData(
+    backgroundColor: primary,
+    foregroundColor: black,
+    shape: CircleBorder(
+      side:BorderSide (width: 4,color: black) 
+    ),
+
+    
+    ),
+
+  textTheme: TextTheme(
+    titleMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      color: white
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      color: white
+    )
+  ) ,
+
+  //elevatedButton
+
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: primary,
+      padding: EdgeInsets.only(top: 8),
+      
+    )
+  ),
+
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: primary
+    )
+  ),
+
+ );
+
+  static of(BuildContext context) {}
 
 
 }
