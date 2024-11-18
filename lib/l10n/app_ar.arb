@@ -1,3 +1,25 @@
 {
-    "todoList" : "قائمة المهام"
+    "todoList" : "قائمة المهام",
+    "settings" : "الاعدادات",
+    "language" : "اللغه",
+    "mode" : "الوضع",
+    "logout" : "خروج",
+    "done" : "انتهي!",
+    "edit" : "تعديل",
+    "delete" : "حذف",
+    "addnewtask" : "إضافة مهمة جديدة",
+    "entertasktitle" : "أدخل عنوان المهمة",
+    "entertaskdescription" : "أدخل وصف المهمة",
+    "selectdate" : "حدد التاريخ",
+    "add" : "اضافة",
+    "title_can_not_be_empty" : "لا يمكن أن يكون العنوان فارغا",
+    "description_can_not_be_empty" : "الوصف لا يمكن أن يكون فارغا",
+    "edittask" : "تعديل المهام",
+    "savechanges" : "حفظ التغييرات",
+    "taskaddedsuccessfully" : "تمت إضافة المهمة بنجاح",
+    "thisistitle" : "هذا هو العنوان",
+    "taskdetails" : "تفاصيل المهمة",
+    "taskdetailscannotbeempty" : "لا يمكن أن تكون تفاصيل المهمة فارغة",
+    "somethingwentwrong" : "لقد حدث خطأ ما"
+
 }

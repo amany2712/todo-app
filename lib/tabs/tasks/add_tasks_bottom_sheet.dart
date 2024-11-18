@@ -6,9 +6,12 @@ import 'package:todo/app_theme.dart';
 import 'package:todo/auth/user_provider.dart';
 import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:todo/widgets/default_elevated_bottom.dart';
 import 'package:todo/widgets/default_text_form_feild.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class AddTaskBottomSheet extends StatefulWidget {
 
@@ -25,6 +28,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
 
     TextStyle ? titleMediumStyle = Theme.of(context).textTheme.titleMedium;        //We made this variable inside build because it has a context
 
@@ -38,7 +42,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             left: Radius.circular(15),
             right:Radius.circular(15) 
            ),
-          color: AppTheme.white,
+          color: settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
         ),
         
         
@@ -47,7 +51,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           child: Column(
             //crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Add new Task',
+              Text(AppLocalizations.of(context)!.addnewtask,
               style: titleMediumStyle,
               textAlign: TextAlign.center,
               ),
@@ -55,10 +59,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         
               DefaultTextFormFeild(
                 controller: titleController,
-                hintText: 'Enter task title',
+                hintText: AppLocalizations.of(context)!.entertasktitle,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return ' Title can not be empty ';
+                    return AppLocalizations.of(context)!.title_can_not_be_empty;
                    }
                  return null;
                   
@@ -68,17 +72,17 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         
                DefaultTextFormFeild(
                 controller:descriptionController ,
-                hintText: 'Enter task discription ',
+                hintText: AppLocalizations.of(context)!.entertaskdescription,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty ) {
-                    return ' Description can not be empty ';
+                    return AppLocalizations.of(context)!.description_can_not_be_empty;
                    }
                  return null;
                   
                 },
                 ),
                  SizedBox(height: 18,),
-                 Text('Select date',
+                 Text(AppLocalizations.of(context)!.selectdate,
                  textAlign: TextAlign.center,
                  style: titleMediumStyle?.copyWith(fontSize: 20,fontWeight: FontWeight.w500 ),
                  ),
@@ -99,16 +103,16 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                      setState(() {});
         
                     } ,
-                   child: Text(
+                   child: Text( 
                     dateFormate.format(selectedDate)  ,
-                   textAlign: TextAlign.center,),
+                   textAlign: TextAlign.center,style: titleMediumStyle),
                  ),
         
                  SizedBox(height: 35,),
         
                  //ElevatedButton
                  DefaultElevatedBottom(
-                  label: 'Add',
+                  label: AppLocalizations.of(context)!.add,
                   onPressed:(){
                     if (formKey.currentState!.validate()) {
                       addTask();
@@ -141,7 +145,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         Navigator.of(context).pop();
         Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
          Fluttertoast.showToast(
-            msg: "Task added successfully",
+            msg: AppLocalizations.of(context)!.taskaddedsuccessfully,
             toastLength: Toast.LENGTH_LONG,  //in android & IOS only
             timeInSecForIosWeb: 1,  //in web
             backgroundColor: Colors.green,
@@ -153,7 +157,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         {
           //fluterToast
          Fluttertoast.showToast(
-            msg: "Something went wrong",
+            msg: AppLocalizations.of(context)!.somethingwentwrong,
             toastLength: Toast.LENGTH_LONG,  //in android & IOS only
             timeInSecForIosWeb: 1,  //in web
             backgroundColor: Colors.red,

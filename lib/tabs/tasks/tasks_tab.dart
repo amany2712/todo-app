@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
 import 'package:todo/auth/user_provider.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/tabs/tasks/task_item.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -23,6 +24,8 @@ class _TasksTabState extends State<TasksTab> {
     double screenHeight = MediaQuery.sizeOf(context).height;
     TasksProvider tasksProvider = Provider.of<TasksProvider>(context);   //because to access 
     String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
+        SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
+
 
    if (shouldGetTasks) {
      
@@ -73,7 +76,7 @@ class _TasksTabState extends State<TasksTab> {
               dayStructure: DayStructure.dayStrDayNum,
               activeDayStyle:DayStyle(
                 decoration: BoxDecoration(
-                  color: AppTheme.white,
+                  color: settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
          
@@ -92,37 +95,37 @@ class _TasksTabState extends State<TasksTab> {
          
               inactiveDayStyle: DayStyle(
                 decoration: BoxDecoration(
-                  color: AppTheme.white,
+                  color: settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 dayNumStyle: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.black
+                  color: settingsProvider.isDark ? AppTheme.white : AppTheme.black,
                 ) ,
          
                 dayStrStyle: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.black
+                  color: settingsProvider.isDark ? AppTheme.white : AppTheme.black,
                 ) , 
               ),
 
               todayStyle: DayStyle(
                 decoration: BoxDecoration(
-                  color: AppTheme.white,
+                  color: settingsProvider.isDark ? AppTheme.darkNavigation : AppTheme.white,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 dayNumStyle: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.black
+                  color: settingsProvider.isDark ? AppTheme.white : AppTheme.black,
                 ) ,
          
                 dayStrStyle: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.black
+                  color: settingsProvider.isDark ? AppTheme.white : AppTheme.black,
                 ) , 
               )
               )

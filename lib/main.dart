@@ -7,6 +7,7 @@ import 'package:todo/auth/register_screen.dart';
 import 'package:todo/auth/user_provider.dart';
 import 'package:todo/home_screen.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/tabs/settings/settings_provider.dart';
 import 'package:todo/tabs/tasks/edit_screen.dart';
 import 'package:todo/tabs/tasks/tasks_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,7 +26,11 @@ Future<void> main() async {
       ChangeNotifierProvider(
       create: (_) => UserProvider(),
       
-      )
+      ),
+      ChangeNotifierProvider(
+      create: (_) => SettingsProvider()..getTheme()..getLanguage(),
+      
+      ),
       ],
       child: TodoApp()
       )
@@ -39,6 +44,7 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     SettingsProvider settingsProvider = Provider.of<SettingsProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
@@ -51,10 +57,12 @@ class TodoApp extends StatelessWidget {
 
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
+      themeMode:settingsProvider.themeModee,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
      supportedLocales: AppLocalizations.supportedLocales,
-     locale: Locale('en'),
+     locale: Locale(SettingsProvider.languageCode),
+     //locale: Locale(settingsProvider.themeMode as String),
+
 
 
 
