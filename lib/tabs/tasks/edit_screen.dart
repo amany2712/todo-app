@@ -188,9 +188,9 @@ class _EditScreenState extends State<EditScreen> {
     );
     String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
     FirebaseFunctions.updateTaskInFirestore(updateTaske,userId)
-    .timeout(
-      Duration(microseconds: 10),
-       onTimeout: () {
+    .then(
+      
+        (_) {
         Navigator.of(context).pop();
         Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
          Fluttertoast.showToast(
