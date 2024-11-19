@@ -139,9 +139,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     );
     String userId = Provider.of<UserProvider>(context,listen: false).CurrentUser!.id;
 
-     await FirebaseFunctions.addTaskToFirestore(task,userId).timeout(
-      Duration(microseconds: 100),
-       onTimeout: () {
+     await FirebaseFunctions.addTaskToFirestore(task,userId).then(
+      
+        (_) {
         Navigator.of(context).pop();
         Provider.of<TasksProvider>(context, listen: false).getTasks(userId);
          Fluttertoast.showToast(

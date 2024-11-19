@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/app_theme.dart';
 import 'package:todo/auth/login_screen.dart';
 import 'package:todo/auth/user_provider.dart';
+import 'package:todo/firebase_functions.dart';
 import 'package:todo/models/user_model.dart';
 import 'package:todo/tabs/settings/language.dart';
 import 'package:todo/tabs/settings/mode.dart';
@@ -217,6 +218,7 @@ class _SettingsTabState extends State<SettingsTab> {
                          ),
                         child: IconButton(color: AppTheme.white,
                           onPressed: () {
+                            FirebaseFunctions.logout();
                             Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
                             Provider.of<TasksProvider>(context,listen: false).tasks.clear();
                             Provider.of<UserProvider>(context,listen: false).updateUser(null);

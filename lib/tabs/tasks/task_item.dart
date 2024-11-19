@@ -36,9 +36,9 @@ class TaskItem extends StatelessWidget {
         SlidableAction(
           onPressed: (_) {
             FirebaseFunctions.DeleteTaskFromFirestore(task.id,userId)
-            .timeout(
-              Duration(microseconds: 100),
-              onTimeout: () => Provider.of<TasksProvider>(context, listen: false).getTasks(userId)
+            .then(
+              
+               (_) => Provider.of<TasksProvider>(context, listen: false).getTasks(userId)
               )
             .catchError((_){
                 Fluttertoast.showToast(
@@ -120,9 +120,9 @@ class TaskItem extends StatelessWidget {
                 child: GestureDetector(
                  onTap: () async {
                   task.isDone = ! task.isDone;
-                  await FirebaseFunctions.updateTaskInFirestore(task,userId).timeout(
-                    const Duration(milliseconds: 10),
-                    onTimeout: (){
+                  await FirebaseFunctions.updateTaskInFirestore(task,userId).then(
+                    
+                     (_){
                       tasksProvider.getTasks(userId);
                     }
                     );
